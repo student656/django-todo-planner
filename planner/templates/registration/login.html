@@ -1,0 +1,25 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вход — Ежедневник</title>
+<link rel="stylesheet" href="{% static 'planner/app.css' %}">
+</head>
+<body>
+<div class="auth-wrap">
+  <form class="auth-card" method="post">
+    {% csrf_token %}
+    <h1>Вход</h1>
+    {% for e in form.non_field_errors %}<div class="err">{{ e }}</div>{% endfor %}
+    <label for="{{ form.username.id_for_label }}">Логин</label>
+    {{ form.username }}
+    <label for="{{ form.password.id_for_label }}">Пароль</label>
+    {{ form.password }}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="submit" type="submit">Войти</button>
+    {% if allow_signup %}<p class="alt">Нет аккаунта? <a href="{% url 'signup' %}">Регистрация</a></p>{% endif %}
+  </form>
+</div>
+</body>
+</html>

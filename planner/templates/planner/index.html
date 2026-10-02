@@ -1,0 +1,142 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ежедневник</title>
+<link rel="stylesheet" href="{% static 'planner/app.css' %}">
+</head>
+<body>
+<div class="topbar">
+  <span>{{ user.get_username }}</span>
+  <a href="{% url 'export' %}" title="Скачать все данные в JSON">⬇ Резервная копия</a>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Выйти</button></form>
+</div>
+<div class="app">
+
+  <section id="page-calendar" class="page active">
+    <h1>Календарь</h1>
+    <p class="sub">Нажмите на день</p>
+    <div class="cal-bar">
+      <button id="prevMonth" class="icon-btn" type="button">‹</button>
+      <div id="monthLabel" class="month"></div>
+      <button id="nextMonth" class="icon-btn" type="button">›</button>
+      <button id="todayBtn" class="today-btn" type="button">Сегодня</button>
+    </div>
+    <div class="weekdays">
+      <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+    </div>
+    <div id="calendarGrid" class="cal-grid"></div>
+  </section>
+
+  <section id="page-day" class="page">
+    <button id="dayBack" class="back" type="button">← Назад</button>
+    <h1 id="dayTitle">День</h1>
+    <p class="sub" id="daySub"></p>
+    <div id="dayLocked" class="locked" style="display:none">День закрыт — только просмотр</div>
+    <ul id="dayList" class="items"></ul>
+    <form id="dayForm" class="add">
+      <input id="dayInput" type="text" placeholder="Новая задача" autocomplete="off">
+      <button type="submit">+</button>
+    </form>
+  </section>
+
+  <section id="page-tasks" class="page">
+    <h1>Задачи</h1>
+    <p class="sub">Цели и дела</p>
+    <div class="board">
+      <div class="col major">
+        <h2>Крупные</h2>
+        <p class="note">Долгосрочные</p>
+        <ul id="list-major"></ul>
+        <form class="add" data-cat="major">
+          <input type="text" placeholder="Задача" autocomplete="off">
+          <button type="submit">+</button>
+        </form>
+      </div>
+      <div class="col projects">
+        <h2>Проекты</h2>
+        <p class="note">Этапы</p>
+        <ul id="list-projects"></ul>
+        <form class="add" data-cat="projects">
+          <input type="text" placeholder="Проект" autocomplete="off">
+          <button type="submit">+</button>
+        </form>
+      </div>
+      <div class="col short">
+        <h2>На неделю</h2>
+        <p class="note">Скоро</p>
+        <ul id="list-short"></ul>
+        <form class="add" data-cat="short">
+          <input type="text" placeholder="Задача" autocomplete="off">
+          <button type="submit">+</button>
+        </form>
+      </div>
+      <div class="col chores">
+        <h2>Дом</h2>
+        <p class="note">Быт</p>
+        <ul id="list-chores"></ul>
+        <form class="add" data-cat="chores">
+          <input type="text" placeholder="Дело" autocomplete="off">
+          <button type="submit">+</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-shopping" class="page">
+    <h1>Покупки</h1>
+    <p class="sub">Список</p>
+    <div class="board shop-board">
+      <div class="col big">
+        <h2>Крупные</h2>
+        <p class="note">Значимые</p>
+        <ul id="list-big"></ul>
+        <form class="add" data-shop="big">
+          <input type="text" placeholder="Покупка" autocomplete="off">
+          <button type="submit">+</button>
+        </form>
+      </div>
+      <div class="col small">
+        <h2>Мелкие</h2>
+        <p class="note">Повседневные</p>
+        <ul id="list-small"></ul>
+        <form class="add" data-shop="small">
+          <input type="text" placeholder="Покупка" autocomplete="off">
+          <button type="submit">+</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-waiting" class="page">
+    <h1>Ожидание</h1>
+    <p class="sub">Заявки и отклики</p>
+    <form id="waitForm" class="w-form">
+      <input id="wTitle" type="text" placeholder="Название" autocomplete="off">
+      <input id="wDate" type="date">
+      <select id="wStatus">
+        <option value="waiting">Ожидание</option>
+        <option value="received">Ответ</option>
+        <option value="accepted">Принято</option>
+        <option value="rejected">Отклонено</option>
+      </select>
+      <button type="submit">+</button>
+      <input id="wNotes" type="text" class="notes" placeholder="Заметка (необязательно)" autocomplete="off">
+    </form>
+    <div id="waitList" class="w-list"></div>
+  </section>
+
+</div>
+
+<nav class="nav">
+  <button class="active" data-page="calendar" type="button" title="Календарь">📅</button>
+  <button data-page="tasks" type="button" title="Задачи">✓</button>
+  <button data-page="shopping" type="button" title="Покупки">🛒</button>
+  <button data-page="waiting" type="button" title="Ожидание">⏳</button>
+</nav>
+
+<div id="toast" class="toast" role="status"></div>
+<script src="{% static 'planner/app.js' %}"></script>
+</body>
+</html>

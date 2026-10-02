@@ -1,0 +1,24 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Регистрация — Ежедневник</title>
+<link rel="stylesheet" href="{% static 'planner/app.css' %}">
+</head>
+<body>
+<div class="auth-wrap">
+  <form class="auth-card" method="post">
+    {% csrf_token %}
+    <h1>Регистрация</h1>
+    {% for field in form %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% for e in field.errors %}<div class="err">{{ e }}</div>{% endfor %}
+    {% endfor %}
+    <button class="submit" type="submit">Создать аккаунт</button>
+    <p class="alt">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+  </form>
+</div>
+</body>
+</html>
